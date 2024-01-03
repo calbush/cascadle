@@ -1,0 +1,13 @@
+.letter {
+    height: 75px;
+    width: 75px;
+    outline: 1px solid purple;
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.word {
+    display: flex;
+}
