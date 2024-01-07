@@ -3,7 +3,7 @@ const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm
 
 let currentWordCoord = 3
 let currentLetterCoord = 0
-let requiredLetters = ['a', 'n']
+let requiredLetters = ['s', 'p']
 let currentLetters = []
 
 //DOM manipulation
@@ -36,25 +36,15 @@ const updateCurrentLetters = (array, letter) => {
     array.pop()
 }
 
-// const updateRequiredLetters = (required, wordArray) => {
-//     wordArray.forEach((letter) => {
-//         if (!required.includes(letter)){
-
-//         }
-//     })
-// }
+const updateRequiredLetters = (arrayToUpdate, wordArray) => {
+    const uniqueLetter = wordArray.filter(letter => !arrayToUpdate.includes(letter))
+    requiredLetters = requiredLetters.concat(uniqueLetter)
+}
 
 //Utility Functions
 
 const verifyRequiredLetterUsage = (requiredLetters, lettersToCheck) => {
-    //Update this function. ForEach is not appropriate here.
-    //Make sure each unique letter is in the submitted word.
-    requiredLetters.forEach((letter) => {
-        if (!lettersToCheck.includes(letter)){
-            return
-        }
-    })
-    return true
+    return requiredLetters.every(letter => lettersToCheck.includes(letter))
 } 
 
 async function checkDictionaryForWord(word){
@@ -79,7 +69,7 @@ const validKeyCheck = (pressedKey) => {
             checkDictionaryForWord(wordToCheck).then((response) => {
                 const status = response.status
                 if(status == 200){
-                    
+                    updateRequiredLetters(requiredLetters, currentLetters)
                     currentLetters = []
                     setCoords(currentWordCoord + 1, 0)
                 }
@@ -97,21 +87,3 @@ const validKeyCheck = (pressedKey) => {
 
 const body = document.querySelector('body')
 body.addEventListener('keydown', validKeyCheck)
-
-/*
-    If a key is pressed. (event listener) ->
-        if key is in alphabet ->
-            if 'letter' coordinate is not >= current word coord (three letter word would have valid letter coords [0,1,2])
-                place letter at div with [coords] ([word coord, letter coord])
-                set letter coords to current coord +1
-        else if key is 'enter' AND letter coord >= word coord ->
-            make API call
-            if unsuccessful display error
-            if successful ->
-                change required letters
-                set current word to currentWord +1
-                set current letter coord to 0
-                checkGameStatus()
-        else if key is 'backspace' AND letter coord is not == 0
-            set letter coord to current letter coord - 1 
-*/
