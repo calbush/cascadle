@@ -3,7 +3,7 @@ const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm
 
 let currentWordCoord = 3
 let currentLetterCoord = 0
-let requiredLetters = ['s', 'p']
+let requiredLetters = ['o', 't']
 let currentLetters = []
 
 //DOM manipulation
@@ -27,9 +27,6 @@ const setCoords = (wordCoord, letterCoord) => {
 
 const updateCurrentLetters = (array, letter) => {
     if (letter){
-        if(array.includes(letter)){
-            return
-        }
         array.push(letter)
         return
     }
@@ -45,7 +42,13 @@ const updateRequiredLetters = (arrayToUpdate, wordArray) => {
 
 const verifyRequiredLetterUsage = (requiredLetters, lettersToCheck) => {
     return requiredLetters.every(letter => lettersToCheck.includes(letter))
-} 
+}
+
+const checkNewUniqueLetter = (requiredLetters, submittedWord) => {
+    const uniqueLetters = submittedWord.filter(letter => !requiredLetters.includes(letter))
+    console.log('unique: ', uniqueLetters)
+    return uniqueLetters.length <= 1
+}
 
 async function checkDictionaryForWord(word){
     const result = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
@@ -60,12 +63,11 @@ const validKeyCheck = (pressedKey) => {
             updateCurrentLetters(currentLetters, pressedKey.key.toLowerCase())
             placeLetterInDOM(currentWordCoord, currentLetterCoord, uppercaseKey)
             setCoords(currentWordCoord, currentLetterCoord + 1)
-
         }
     } else if (pressedKey.key == 'Enter' && currentLetterCoord >= currentWordCoord){
         const wordToCheck = currentLetters.join('')
         //Need to verify if required letters are used and it's a valid word
-        if(verifyRequiredLetterUsage(requiredLetters, currentLetters)){
+        if(verifyRequiredLetterUsage(requiredLetters, currentLetters) && checkNewUniqueLetter(requiredLetters, currentLetters)){
             checkDictionaryForWord(wordToCheck).then((response) => {
                 const status = response.status
                 if(status == 200){
