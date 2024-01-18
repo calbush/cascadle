@@ -2,9 +2,12 @@ const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm
 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
 let currentWordCoord = 3
+let gameState = 'active'
 let currentLetterCoord = 0
 let requiredLetters = ['o', 't']
 let currentLetters = []
+let freebieUsed = false
+let wordWithLastUniqueLetter
 
 //DOM manipulation
 
@@ -18,6 +21,18 @@ const removeLetterFromDOM = (wordCoord, letterCoord) => {
     box.textContent = ''
 }
 
+const deleteWord = (wordCoord) => {
+    const wordToDelete = document.getElementById(`word${wordCoord}`)
+    const wordToDeleteChildNodes = wordToDelete.childNodes
+    wordToDeleteChildNodes.forEach((node) => {
+        node.textContent = ''
+    })
+}
+
+const disableBtn = (btn) => {
+    btn.disabled = true
+}
+
 //State management
 
 const setCoords = (wordCoord, letterCoord) => {   
@@ -25,28 +40,53 @@ const setCoords = (wordCoord, letterCoord) => {
     currentLetterCoord = letterCoord
 }
 
-const updateCurrentLetters = (array, letter) => {
+const updateCurrentLetters = (updateArray, letter) => {
     if (letter){
-        array.push(letter)
+        updateArray.push(letter)
         return
     }
-    array.pop()
+    updateArray.pop()
+}
+
+const clearCurrentLetters = () => {
+    currentLetters = []
 }
 
 const updateRequiredLetters = (arrayToUpdate, wordArray) => {
     const uniqueLetter = wordArray.filter(letter => !arrayToUpdate.includes(letter))
     requiredLetters = requiredLetters.concat(uniqueLetter)
+    if (uniqueLetter.length > 1){
+        wordWithLastUniqueLetter = currentWordCoord
+    }
+}
+
+const addStrike = () => {
+    strikes++
+}
+
+const useFreebie = () => {
+    if (currentWordCoord === 3 || freebieUsed === true){
+        return
+    }
+    freebieUsed = true
+    deleteWord(currentWordCoord)
+    setCoords(currentWordCoord - 1, 0)
+    deleteWord(currentWordCoord)
+    clearCurrentLetters()
+    disableBtn(document.getElementById('freebie'))
+    if (wordWithLastUniqueLetter == currentWordCoord){
+        requiredLetters.pop()
+    }
+
 }
 
 //Utility Functions
-
 const verifyRequiredLetterUsage = (requiredLetters, lettersToCheck) => {
     return requiredLetters.every(letter => lettersToCheck.includes(letter))
 }
 
 const checkNewUniqueLetter = (requiredLetters, submittedWord) => {
     const uniqueLetters = submittedWord.filter(letter => !requiredLetters.includes(letter))
-    console.log('unique: ', uniqueLetters)
     return uniqueLetters.length <= 1
 }
 
@@ -57,7 +97,6 @@ async function checkDictionaryForWord(word){
 
 const validKeyCheck = (pressedKey) => {
     const uppercaseKey = pressedKey.key.toUpperCase()
-    
     if (alphabet.includes(pressedKey.key.toLowerCase())){
         if (currentLetterCoord < currentWordCoord){
             updateCurrentLetters(currentLetters, pressedKey.key.toLowerCase())
@@ -66,11 +105,15 @@ const validKeyCheck = (pressedKey) => {
         }
     } else if (pressedKey.key == 'Enter' && currentLetterCoord >= currentWordCoord){
         const wordToCheck = currentLetters.join('')
-        //Need to verify if required letters are used and it's a valid word
+        //Need to verify if all rules have been met
         if(verifyRequiredLetterUsage(requiredLetters, currentLetters) && checkNewUniqueLetter(requiredLetters, currentLetters)){
             checkDictionaryForWord(wordToCheck).then((response) => {
                 const status = response.status
                 if(status == 200){
+                    if(currentWordCoord == 7){
+                        console.log('winner')
+                        return
+                    }
                     updateRequiredLetters(requiredLetters, currentLetters)
                     currentLetters = []
                     setCoords(currentWordCoord + 1, 0)
@@ -88,4 +131,7 @@ const validKeyCheck = (pressedKey) => {
 }
 
 const body = document.querySelector('body')
+const freebieBtn = document.getElementById('freebie')
 body.addEventListener('keydown', validKeyCheck)
+freebieBtn.addEventListener('click', useFreebie)
+
