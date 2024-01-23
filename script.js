@@ -33,6 +33,16 @@ const disableBtn = (btn) => {
     btn.disabled = true
 }
 
+const displayError = (error) => {
+    if(error == 'required'){
+        console.log('required letters not used')
+    } else if(error == 'unique'){
+        console.log('Only one unique additional unique letter may be used per word')
+    } else if(error == 'valid'){
+        console.log('Couldn\'t find word in dictionary')
+    }
+}
+
 //State management
 
 const setCoords = (wordCoord, letterCoord) => {   
@@ -58,10 +68,6 @@ const updateRequiredLetters = (arrayToUpdate, wordArray) => {
     if (uniqueLetter.length > 1){
         wordWithLastUniqueLetter = currentWordCoord
     }
-}
-
-const addStrike = () => {
-    strikes++
 }
 
 const useFreebie = () => {
@@ -106,23 +112,29 @@ const validKeyCheck = (pressedKey) => {
     } else if (pressedKey.key == 'Enter' && currentLetterCoord >= currentWordCoord){
         const wordToCheck = currentLetters.join('')
         //Need to verify if all rules have been met
-        if(verifyRequiredLetterUsage(requiredLetters, currentLetters) && checkNewUniqueLetter(requiredLetters, currentLetters)){
-            checkDictionaryForWord(wordToCheck).then((response) => {
-                const status = response.status
-                if(status == 200){
-                    if(currentWordCoord == 7){
-                        console.log('winner')
-                        return
-                    }
-                    updateRequiredLetters(requiredLetters, currentLetters)
-                    currentLetters = []
-                    setCoords(currentWordCoord + 1, 0)
-                }
-                else if(status == 404){
-                    console.log('invalid')
-                } else console.log(status)
-            })
+        if(!verifyRequiredLetterUsage(requiredLetters, currentLetters)){
+            displayError('required')
+            return
         }
+        if(!checkNewUniqueLetter(requiredLetters, currentLetters)){
+            displayError('unique')
+            return
+        }
+        checkDictionaryForWord(wordToCheck).then((response) => {
+            const status = response.status
+            if(status == 200){
+                if(currentWordCoord == 7){
+                    console.log('winner')
+                    return
+                }
+                updateRequiredLetters(requiredLetters, currentLetters)
+                currentLetters = []
+                setCoords(currentWordCoord + 1, 0)
+            }
+            else if(status == 404){
+                displayError('valid')
+            } else console.log(status)
+        })
     } else if (pressedKey.key == 'Backspace' && currentLetterCoord !== 0){
         updateCurrentLetters(currentLetters)
         removeLetterFromDOM(currentWordCoord, currentLetterCoord - 1)
