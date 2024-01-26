@@ -41,6 +41,11 @@ const displayError = (errorText) => {
     setTimeout(() => errorMessage.remove(), 1400)
 }
 
+const postRequiredLettersToDOM = () => {
+    const requiredLettersDiv = document.getElementById('required')
+    requiredLettersDiv.textContent = requiredLetters
+}
+
 //State management
 
 const setCoords = (wordCoord, letterCoord) => {   
@@ -125,6 +130,7 @@ const validKeyCheck = (pressedKey) => {
                     return
                 }
                 updateRequiredLetters(requiredLetters, currentLetters)
+                postRequiredLettersToDOM()
                 currentLetters = []
                 setCoords(currentWordCoord + 1, 0)
             }
@@ -141,6 +147,7 @@ const validKeyCheck = (pressedKey) => {
 
 const body = document.querySelector('body')
 const freebieBtn = document.getElementById('freebie')
+postRequiredLettersToDOM()
 body.addEventListener('keydown', validKeyCheck)
 freebieBtn.addEventListener('click', useFreebie)
 
