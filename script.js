@@ -38,7 +38,7 @@ const displayError = (errorText) => {
     errorMessage.textContent = errorText
     errorMessage.classList.add('error')
     document.body.append(errorMessage)
-    setTimeout(() => errorMessage.remove(), 1300)
+    setTimeout(() => errorMessage.remove(), 1400)
 }
 
 //State management
@@ -111,18 +111,17 @@ const validKeyCheck = (pressedKey) => {
         const wordToCheck = currentLetters.join('')
         //Need to verify if all rules have been met
         if(!verifyRequiredLetterUsage(requiredLetters, currentLetters)){
-            displayError('required')
+            displayError('Must use all required letters')
             return
         }
         if(!checkNewUniqueLetter(requiredLetters, currentLetters)){
-            displayError('unique')
+            displayError('Maximum of 1 new unique letter per word')
             return
         }
         checkDictionaryForWord(wordToCheck).then((response) => {
             const status = response.status
             if(status == 200){
                 if(currentWordCoord == 7){
-                    console.log('winner')
                     return
                 }
                 updateRequiredLetters(requiredLetters, currentLetters)
@@ -130,7 +129,7 @@ const validKeyCheck = (pressedKey) => {
                 setCoords(currentWordCoord + 1, 0)
             }
             else if(status == 404){
-                displayError('valid')
+                displayError('Couldn\'t find a word matching that spelling')
             } else console.log(status)
         })
     } else if (pressedKey.key == 'Backspace' && currentLetterCoord !== 0){
