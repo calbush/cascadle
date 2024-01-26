@@ -33,14 +33,12 @@ const disableBtn = (btn) => {
     btn.disabled = true
 }
 
-const displayError = (error) => {
-    if(error == 'required'){
-        console.log('required letters not used')
-    } else if(error == 'unique'){
-        console.log('Only one unique additional unique letter may be used per word')
-    } else if(error == 'valid'){
-        console.log('Couldn\'t find word in dictionary')
-    }
+const displayError = (errorText) => {
+    const errorMessage = document.createElement('div')
+    errorMessage.textContent = errorText
+    errorMessage.classList.add('error')
+    document.body.append(errorMessage)
+    setTimeout(() => errorMessage.remove(), 1300)
 }
 
 //State management
