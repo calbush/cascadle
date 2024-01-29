@@ -42,10 +42,24 @@ const displayError = (errorText) => {
 }
 
 const postRequiredLettersToDOM = () => {
-    const requiredLettersDiv = document.getElementById('required')
-    requiredLettersDiv.textContent = requiredLetters
+    const requiredLettersElement = document.getElementById('required')
+    const currentLettersElements = document.querySelectorAll('.required-letter')
+    if (currentLettersElements.length !== requiredLetters.length){
+        currentLettersElements.forEach((element) => {
+            element.remove()
+        })
+        requiredLetters.forEach((letter) => {
+            const requiredLetter = document.createElement('li')
+            requiredLetter.classList.add('required-letter')
+            requiredLetter.textContent = letter
+            requiredLettersElement.append(requiredLetter)
+        })
+    }
+    //check for difference between required letters and current amount of child elements
+    //if there is a difference, remove all children and re-add required letters
+    //call this function in freebie func?
+    
 }
-
 //State management
 
 const setCoords = (wordCoord, letterCoord) => {   
@@ -135,7 +149,7 @@ const validKeyCheck = (pressedKey) => {
                 setCoords(currentWordCoord + 1, 0)
             }
             else if(status == 404){
-                displayError('Couldn\'t find a word matching that spelling')
+                displayError('Couldn\'t find a valid word matching that spelling')
             } else console.log(status)
         })
     } else if (pressedKey.key == 'Backspace' && currentLetterCoord !== 0){
