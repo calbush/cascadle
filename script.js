@@ -1,13 +1,12 @@
-const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
 let currentWordCoord = 3
 let gameState = 'active'
 let currentLetterCoord = 0
-let requiredLetters = ['o', 't']
+let requiredLetters = ['O', 'T']
 let currentLetters = []
 let freebieUsed = false
-let wordWithLastUniqueLetter
 
 //DOM manipulation
 
@@ -55,10 +54,6 @@ const postRequiredLettersToDOM = () => {
             requiredLettersElement.append(requiredLetter)
         })
     }
-    //check for difference between required letters and current amount of child elements
-    //if there is a difference, remove all children and re-add required letters
-    //call this function in freebie func?
-    
 }
 //State management
 
@@ -75,16 +70,9 @@ const updateCurrentLetters = (updateArray, letter) => {
     updateArray.pop()
 }
 
-const clearCurrentLetters = () => {
-    currentLetters = []
-}
-
 const updateRequiredLetters = (arrayToUpdate, wordArray) => {
     const uniqueLetter = wordArray.filter(letter => !arrayToUpdate.includes(letter))
     requiredLetters = requiredLetters.concat(uniqueLetter)
-    if (uniqueLetter.length > 1){
-        wordWithLastUniqueLetter = currentWordCoord
-    }
 }
 
 const useFreebie = () => {
@@ -95,12 +83,11 @@ const useFreebie = () => {
     deleteWord(currentWordCoord)
     setCoords(currentWordCoord - 1, 0)
     deleteWord(currentWordCoord)
-    clearCurrentLetters()
+    const previousWordChildren = document.getElementById(`word${currentWordCoord - 1}`).children
+    const previousWordLetters = Array.from(previousWordChildren, (element) => element.innerText)
+    requiredLetters = previousWordLetters.filter((letter, index) => previousWordLetters.indexOf(letter) === index)
+    postRequiredLettersToDOM()
     disableBtn(document.getElementById('freebie'))
-    if (wordWithLastUniqueLetter == currentWordCoord){
-        requiredLetters.pop()
-    }
-
 }
 
 //Utility Functions
@@ -120,9 +107,9 @@ async function checkDictionaryForWord(word){
 
 const validKeyCheck = (pressedKey) => {
     const uppercaseKey = pressedKey.key.toUpperCase()
-    if (alphabet.includes(pressedKey.key.toLowerCase())){
+    if (alphabet.includes(uppercaseKey)){
         if (currentLetterCoord < currentWordCoord){
-            updateCurrentLetters(currentLetters, pressedKey.key.toLowerCase())
+            updateCurrentLetters(currentLetters, uppercaseKey)
             placeLetterInDOM(currentWordCoord, currentLetterCoord, uppercaseKey)
             setCoords(currentWordCoord, currentLetterCoord + 1)
         }
