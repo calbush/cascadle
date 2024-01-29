@@ -79,6 +79,16 @@ const useFreebie = () => {
     if (currentWordCoord === 3 || freebieUsed === true){
         return
     }
+    else if (currentWordCoord === 4 && requiredLetters.length > 2){
+        freebieUsed = true
+        deleteWord(currentWordCoord)
+        setCoords(currentWordCoord - 1, 0)
+        deleteWord(currentWordCoord)
+        requiredLetters.pop()
+        postRequiredLettersToDOM()
+        disableBtn(document.getElementById('freebie'))
+        return
+    }
     freebieUsed = true
     deleteWord(currentWordCoord)
     setCoords(currentWordCoord - 1, 0)
