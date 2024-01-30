@@ -33,11 +33,14 @@ const disableBtn = (btn) => {
 }
 
 const displayError = (errorText) => {
-    const errorMessage = document.createElement('div')
-    errorMessage.textContent = errorText
-    errorMessage.classList.add('error')
-    document.body.append(errorMessage)
-    setTimeout(() => errorMessage.remove(), 1400)
+    const errorDisplay = document.createElement('div')
+    errorDisplay.classList.add('error')
+    const errorMsg = document.createElement('div')
+    errorMsg.textContent = errorText
+    errorMsg.classList.add('error-text')
+    errorDisplay.append(errorMsg)
+    document.body.append(errorDisplay)
+    setTimeout(() => errorDisplay.remove(), 1600)
 }
 
 const postRequiredLettersToDOM = () => {
@@ -131,7 +134,7 @@ const validKeyCheck = (pressedKey) => {
             return
         }
         if(!checkNewUniqueLetter(requiredLetters, currentLetters)){
-            displayError('Maximum of 1 new unique letter per word')
+            displayError('Maximum of one new unique letter per word')
             return
         }
         checkDictionaryForWord(wordToCheck).then((response) => {
