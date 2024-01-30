@@ -42,16 +42,40 @@ table {
 	border-spacing: 0;
 }
 
+/* ---------------------------------------------------- */
+@font-face {
+    font-family: "Title";
+    src: url("assets/fonts/Sixtyfour-Regular.ttf");
+}
+
+@font-face {
+    font-family: 'Varela';
+    src: url('assets/fonts/VarelaRound-Regular.ttf');
+}
+
+:root {
+    --main-bg-color: #EFEFEF;
+    --main-font-color: #a9a9a9;
+    --main-accent-color: #FF3B3F;
+    --alt-accent-color: #CAEBF2;
+}
+
+.h1 {
+    font-family: 'Title';
+    font-size: 60px;
+}
+
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
+    background-color: var(--main-bg-color);
+    font-family: 'Varela';
 }
 
 .game-holder {
-    background-color: blue;
     display: flex;
     flex-direction: column;
 }
@@ -59,15 +83,28 @@ body {
 .letter {
     height: 75px;
     width: 75px;
-    outline: 1px solid purple;
     font-size: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+ul {
+    display: flex;
+}
+
 .word {
     display: flex;
+}
+
+.required-letters-display {
+    display: flex;
+    gap: 10px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.letter {
+    color: var(--main-font-color)
 }
 
 .button {
@@ -77,11 +114,22 @@ body {
 
 .error {
     height: 100px;
-    width: 200px;
+    width: 225px;
     background-color: aqua;
     position: absolute;
+    top: 50px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     animation-name: fadeout;
-    animation-duration: .6s;
+    animation-duration: .5s;
+}
+
+.error-text {
+    max-width: 180px;
+    display: flex;
+    text-align: center;
 }
 
 @keyframes fadeout {
