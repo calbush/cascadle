@@ -1,3 +1,5 @@
+import buildKeyboard from "./modules/Keyboard"
+
 const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
@@ -119,6 +121,7 @@ async function checkDictionaryForWord(word){
 }
 
 const validKeyCheck = (pressedKey) => {
+    setTimeout(1000)
     const uppercaseKey = pressedKey.key.toUpperCase()
     if (alphabet.includes(uppercaseKey)){
         if (currentLetterCoord < currentWordCoord){
@@ -161,6 +164,8 @@ const validKeyCheck = (pressedKey) => {
 
 const body = document.querySelector('body')
 const freebieBtn = document.getElementById('freebie')
+const keyboard = buildKeyboard()
+document.getElementById('keyboard-holder').appendChild(keyboard)
 postRequiredLettersToDOM()
 body.addEventListener('keydown', validKeyCheck)
 freebieBtn.addEventListener('click', useFreebie)
