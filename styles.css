@@ -62,7 +62,9 @@ table {
 
 .h1 {
     font-family: 'Title';
-    font-size: 60px;
+    font-size: 50px;
+    padding-top: 10px;
+    color: var(--main-accent-color);
 }
 
 body {
@@ -73,20 +75,25 @@ body {
     position: relative;
     background-color: var(--main-bg-color);
     font-family: 'Varela';
+    gap: 20px;
 }
 
 .game-holder {
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 .letter {
-    height: 75px;
-    width: 75px;
-    font-size: 40px;
+    height: 50px;
+    width: 50px;
+    font-size: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 2px solid var(--alt-accent-color);
+    background-color: seashell;
+    color: lightslategray;
 }
 
 ul {
@@ -95,16 +102,16 @@ ul {
 
 .word {
     display: flex;
+    gap: 2px;
 }
 
 .required-letters-display {
+    max-width: 500px;
     display: flex;
     gap: 10px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-}
-
-.letter {
-    color: var(--main-font-color)
+    display: flex;
+    justify-content: end;
 }
 
 .button {
@@ -115,15 +122,17 @@ ul {
 .error {
     height: 100px;
     width: 225px;
-    background-color: aqua;
+    background-color: var(--main-bg-color);
+    border: 1px solid var(--main-accent-color);
     position: absolute;
-    top: 50px;
+    top: 75px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
     animation-name: fadeout;
     animation-duration: .5s;
+    border-radius: 25px;
 }
 
 .error-text {
